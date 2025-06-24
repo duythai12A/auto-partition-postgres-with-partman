@@ -1,0 +1,1 @@
+# auto-partition-postgres-with-partman
