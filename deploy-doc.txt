@@ -1,0 +1,16 @@
+- in postgres.conf
+	shared_preload_libraries = 'pg_partman_bgw'     # (change requires restart)
+- in postgres 
+	CREATE SCHEMA partman;
+    CREATE EXTENSION pg_partman SCHEMA partman;
+	
+	CREATE TABLE IF NOT EXISTS public.tablename ( pkcolumnname character varying COLLATE pg_catalog."default" NOT NULL, columnname character varying COLLATE pg_catalog."default" NOT NULL, partitioncolumn timestamp with time zone NOT NULL, CONSTRAINT pk PRIMARY KEY (pkcolumnname,partitioncolumn) )PARTITION BY RANGE(partitioncolumn);
+	
+	SELECT partman.create_parent(
+    p_parent_table => 'public.tablename',
+    p_control      => 'partitioncolumn',
+    p_interval     => '1 day',
+    p_premake      => 30
+    );
+	
+	SELECT extversion FROM pg_extension WHERE extname = 'pg_partman';
